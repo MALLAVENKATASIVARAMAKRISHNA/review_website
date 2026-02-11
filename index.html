@@ -6,153 +6,205 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-  body {
-    font-family: "Segoe UI", Arial, sans-serif;
-    background: #0f172a;
-    margin: 0;
-    padding: 0;
-    color: #e2e8f0;
-  }
-
-  /* HERO */
-  .hero {
-    background: linear-gradient(90deg, #1e293b, #0f172a);
-    color: white;
-    padding: 60px 20px;
-    text-align: center;
-    border-bottom: 1px solid #1e293b;
-  }
-
-  .hero h1 {
-    font-size: 36px;
-    margin: 0;
-    font-weight: 700;
-  }
-
-  .hero p {
-    margin-top: 10px;
-    font-size: 16px;
-    opacity: 0.8;
-  }
-
-  /* STATS */
-  .stats {
-    max-width: 1100px;
-    margin: -30px auto 40px auto;
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-  }
-
-  .stat-box {
-    background: #1e293b;
-    padding: 20px 40px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-    text-align: center;
-  }
-
-  .stat-number {
-    font-size: 24px;
-    font-weight: 700;
-    color: #3b82f6;
-  }
-
-  .stat-label {
-    font-size: 13px;
-    color: #94a3b8;
-    margin-top: 5px;
-  }
-
-  /* REVIEW GRID */
-  .reviews {
-    max-width: 1200px;
-    margin: auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-    padding: 20px;
-  }
-
-  @media (max-width: 992px) {
-    .reviews {
-      grid-template-columns: repeat(2, 1fr);
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #0f172a;
+      margin: 0;
+      padding: 0;
+      color: #e2e8f0;
     }
-  }
 
-  @media (max-width: 600px) {
-    .reviews {
-      grid-template-columns: 1fr;
+    /* HERO */
+    .hero {
+      background: linear-gradient(90deg, #1e293b, #0f172a);
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+      border-bottom: 1px solid #1e293b;
     }
-  }
 
-  .card {
-    background: #1e293b;
-    padding: 20px;
-    border-radius: 14px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-    display: flex;
-    gap: 15px;
-    align-items: flex-start;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
+    .hero h1 {
+      font-size: 36px;
+      margin: 0;
+      font-weight: 700;
+    }
 
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 35px rgba(0,0,0,0.6);
-  }
+    .hero p {
+      margin-top: 10px;
+      font-size: 16px;
+      opacity: 0.8;
+    }
 
-  .card img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #3b82f6;
-  }
+    /* QUOTE SECTION */
+    .quote-section {
+      text-align: center;
+      padding: 40px 20px 10px 20px;
+    }
 
-  .review {
-    font-size: 14px;
-    line-height: 1.6;
-    background: #0f172a;
-    padding: 12px;
-    border-radius: 10px;
-    font-weight: 500;
-    color: #e2e8f0;
-  }
+    .quote-text {
+      font-size: 18px;
+      font-style: italic;
+      color: #cbd5e1;
+      max-width: 700px;
+      margin: auto;
+      line-height: 1.8;
+      position: relative;
+    }
 
-  .student-info {
-    margin-top: 10px;
-    font-size: 12px;
-    color: #94a3b8;
-  }
+    .quote-text::before {
+      content: "“";
+      font-size: 40px;
+      color: #3b82f6;
+      position: absolute;
+      left: -25px;
+      top: -10px;
+    }
 
-  /* PAGINATION */
-  .pagination {
-    text-align: center;
-    margin: 40px 0;
-  }
+    .quote-text::after {
+      content: "”";
+      font-size: 40px;
+      color: #3b82f6;
+      position: absolute;
+      right: -25px;
+      bottom: -20px;
+    }
 
-  .pagination button {
-    padding: 8px 18px;
-    margin: 0 8px;
-    border: none;
-    background: #3b82f6;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
+    /* STATS */
+    .stats {
+      max-width: 1100px;
+      margin: 20px auto 40px auto;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+    }
 
-  .pagination button:hover {
-    background: #2563eb;
-  }
+    .stat-box {
+      background: #1e293b;
+      padding: 20px 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      text-align: center;
+    }
 
-  .pagination button:disabled {
-    background: #475569;
-    cursor: not-allowed;
-  }
-</style>
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: #3b82f6;
+    }
 
+    .stat-label {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 5px;
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 600;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+    }
+
+    /* REVIEW GRID */
+    .reviews {
+      max-width: 1200px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      padding: 20px;
+    }
+
+    @media (max-width: 992px) {
+      .reviews {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .reviews {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+    }
+
+    .card img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #3b82f6;
+    }
+
+    .review {
+      font-size: 14px;
+      line-height: 1.6;
+      background: #0f172a;
+      padding: 18px 14px 14px 14px;
+      border-radius: 10px;
+      font-weight: 500;
+      color: #e2e8f0;
+    }
+
+    .quote-icon {
+      display: block;
+      font-size: 32px;
+      color: #3b82f6;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .student-info {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    /* PAGINATION */
+    .pagination {
+      text-align: center;
+      margin: 40px 0;
+    }
+
+    .pagination button {
+      padding: 8px 18px;
+      margin: 0 8px;
+      border: none;
+      background: #3b82f6;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .pagination button:hover {
+      background: #2563eb;
+    }
+
+    .pagination button:disabled {
+      background: #475569;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
 
 <body>
@@ -162,11 +214,21 @@
     <p>Insights and feedback from our engineering students</p>
   </div>
 
+  <div class="quote-section">
+    <p class="quote-text">
+      Empowering future engineers through practical AI learning.
+    </p>
+  </div>
+
   <div class="stats">
     <div class="stat-box">
       <div class="stat-number" id="totalReviews">0</div>
       <div class="stat-label">Total Reviews</div>
     </div>
+  </div>
+
+  <div class="section-title">
+    What Participants Say
   </div>
 
   <div class="reviews" id="reviews"></div>
@@ -223,7 +285,10 @@
         card.innerHTML = `
           <img src="${imageUrl}" onerror="this.src='https://via.placeholder.com/70'" />
           <div>
-            <div class="review">${review.review_text}</div>
+            <div class="review">
+              <span class="quote-icon">“</span>
+              ${review.review_text}
+            </div>
             <div class="student-info">
               ${review.full_name} • ${review.roll_number}
             </div>
