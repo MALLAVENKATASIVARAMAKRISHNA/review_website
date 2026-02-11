@@ -86,72 +86,103 @@
   <div class="reviews" id="reviews"></div>
 
   <div class="pagination">
-    <button onclick="prevPage()">Previous</button>
-    <button onclick="nextPage()">Next</button>
-  </div>
+  <button id="prevBtn" onclick="prevPage()">Previous</button>
+  <span id="pageInfo" style="margin: 0 15px;"></span>
+  <button id="nextBtn" onclick="nextPage()">Next</button>
+</div>
 
-  <script>
-    const SUPABASE_URL = "https://dkjxuswyoyjitjdohepg.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRranh1c3d5b3lqaXRqZG9oZXBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3NzM1MzQsImV4cCI6MjA4NjM0OTUzNH0.Qf-MVpBqWLGfIpewx7qKKV1YsgKEtKh1AQVdBLctLjE";
 
-    const supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
+<script>
+  const SUPABASE_URL = "https://dkjxuswyoyjitjdohepg.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRranh1c3d5b3lqaXRqZG9oZXBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3NzM1MzQsImV4cCI6MjA4NjM0OTUzNH0.Qf-MVpBqWLGfIpewx7qKKV1YsgKEtKh1AQVdBLctLjE";
 
-    const reviewsPerPage = 9;
-    let currentPage = 1;
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
 
-    async function loadReviews(page) {
-      const from = (page - 1) * reviewsPerPage;
-      const to = from + reviewsPerPage - 1;
+  const reviewsPerPage = 9;
+  let currentPage = 1;
+  let totalPages = 1;
 
-      const { data, error } = await supabaseClient
-        .from("bootcamp_reviews")
-        .select("*")
-        .range(from, to);
+  async function getTotalPages() {
+    const { count, error } = await supabaseClient
+      .from("bootcamp_reviews")
+      .select("*", { count: "exact", head: true });
 
-      if (error) {
-        console.error("Error:", error);
-        return;
-      }
-
-      const container = document.getElementById("reviews");
-      container.innerHTML = "";
-
-      data.forEach(review => {
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const imageUrl =
-          `${SUPABASE_URL}/storage/v1/object/public/student-images/${review.image_path}`;
-
-        card.innerHTML = `
-          <img src="${imageUrl}" 
-               onerror="this.src='https://via.placeholder.com/90'" />
-          <div class="name">${review.full_name || ""}</div>
-          <div class="branch">${review.branch || ""}</div>
-          <div class="review">${review.review_text || ""}</div>
-        `;
-
-        container.appendChild(card);
-      });
+    if (error) {
+      console.error(error);
+      return;
     }
 
-    function nextPage() {
+    totalPages = Math.ceil(count / reviewsPerPage);
+    updatePageInfo();
+  }
+
+  async function loadReviews(page) {
+    const from = (page - 1) * reviewsPerPage;
+    const to = from + reviewsPerPage - 1;
+
+    const { data, error } = await supabaseClient
+      .from("bootcamp_reviews")
+      .select("*")
+      .range(from, to);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    const container = document.getElementById("reviews");
+    container.innerHTML = "";
+
+    data.forEach(review => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const imageUrl =
+        `${SUPABASE_URL}/storage/v1/object/public/student-images/${review.image_path}`;
+
+      card.innerHTML = `
+        <img src="${imageUrl}" 
+             onerror="this.src='https://via.placeholder.com/90'" />
+        <div class="name">${review.full_name || ""}</div>
+        <div class="branch">${review.branch || ""}</div>
+        <div class="review">${review.review_text || ""}</div>
+      `;
+
+      container.appendChild(card);
+    });
+
+    updatePageInfo();
+  }
+
+  function updatePageInfo() {
+    document.getElementById("pageInfo").innerText =
+      `Page ${currentPage} of ${totalPages}`;
+
+    document.getElementById("prevBtn").disabled = currentPage === 1;
+    document.getElementById("nextBtn").disabled = currentPage === totalPages;
+  }
+
+  function nextPage() {
+    if (currentPage < totalPages) {
       currentPage++;
       loadReviews(currentPage);
     }
+  }
 
-    function prevPage() {
-      if (currentPage > 1) {
-        currentPage--;
-        loadReviews(currentPage);
-      }
+  function prevPage() {
+    if (currentPage > 1) {
+      currentPage--;
+      loadReviews(currentPage);
     }
+  }
 
-    loadReviews(currentPage);
-  </script>
+  getTotalPages();
+  loadReviews(currentPage);
+</script>
+
 
 </body>
 </html>
