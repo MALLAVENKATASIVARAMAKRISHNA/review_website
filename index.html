@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Bootcamp Reviews</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,13 +15,15 @@
 
     h1 {
       text-align: center;
+      margin-bottom: 40px;
     }
 
     .reviews {
+      max-width: 1200px;
+      margin: auto;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 20px;
-      margin-top: 30px;
     }
 
     .card {
@@ -54,13 +57,38 @@
       font-size: 14px;
       margin-top: 8px;
     }
+
+    .pagination {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .pagination button {
+      padding: 8px 15px;
+      margin: 0 5px;
+      border: none;
+      background: #4a90e2;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .pagination button:hover {
+      background: #357abd;
+    }
   </style>
 </head>
+
 <body>
 
   <h1>AI Karyashala Bootcamp Reviews</h1>
 
   <div class="reviews" id="reviews"></div>
+
+  <div class="pagination">
+    <button onclick="prevPage()">Previous</button>
+    <button onclick="nextPage()">Next</button>
+  </div>
 
   <script>
     const SUPABASE_URL = "https://dkjxuswyoyjitjdohepg.supabase.co";
@@ -71,13 +99,20 @@
       SUPABASE_ANON_KEY
     );
 
-    async function loadReviews() {
+    const reviewsPerPage = 9;
+    let currentPage = 1;
+
+    async function loadReviews(page) {
+      const from = (page - 1) * reviewsPerPage;
+      const to = from + reviewsPerPage - 1;
+
       const { data, error } = await supabaseClient
         .from("bootcamp_reviews")
-        .select("*");
+        .select("*")
+        .range(from, to);
 
       if (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error:", error);
         return;
       }
 
@@ -94,7 +129,7 @@
         card.innerHTML = `
           <img src="${imageUrl}" 
                onerror="this.src='https://via.placeholder.com/90'" />
-          <div class="name">${review.full_name || "No Name"}</div>
+          <div class="name">${review.full_name || ""}</div>
           <div class="branch">${review.branch || ""}</div>
           <div class="review">${review.review_text || ""}</div>
         `;
@@ -103,7 +138,19 @@
       });
     }
 
-    loadReviews();
+    function nextPage() {
+      currentPage++;
+      loadReviews(currentPage);
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        loadReviews(currentPage);
+      }
+    }
+
+    loadReviews(currentPage);
   </script>
 
 </body>
