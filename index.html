@@ -14,6 +14,10 @@
       color: white;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     /* ===== HEADER WITH LOGO ===== */
     header {
       background: rgba(15, 23, 42, 0.8);
@@ -22,6 +26,9 @@
       position: sticky;
       top: 0;
       z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .logo {
@@ -37,6 +44,25 @@
     .logo img {
       height: 60px;
       width: auto;
+    }
+
+    .contact-btn {
+      padding: 10px 25px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .contact-btn:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
     }
 
     /* ===== HERO SECTION (MOVED FROM HEADER) ===== */
@@ -248,6 +274,67 @@
       transform: translateY(0);
     }
 
+    /* ===== FOOTER ===== */
+    footer {
+      background: #0f172a;
+      padding: 40px 20px 20px;
+      margin-top: 60px;
+      border-top: 2px solid #1e293b;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-link {
+      padding: 10px 30px;
+      background: #3b82f6;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .footer-link:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .footer-copyright {
+      color: #94a3b8;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .footer-links {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .footer-link {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
   </style>
 </head>
 
@@ -258,6 +345,7 @@
   <a href="#" class="logo" onclick="goToHome(event)">
     <img src="https://aikaryashala.com/images/logo%20transparent.png" alt="AI Karyashala Logo">
   </a>
+  <a href="#footer" class="contact-btn">Contact Us</a>
 </header>
 
 <!-- ===== HERO SECTION (CONTENT MOVED FROM HEADER) ===== -->
@@ -295,6 +383,19 @@
   <span id="pageInfo"></span>
   <button id="nextBtn" onclick="nextPage()">Next</button>
 </div>
+
+<!-- ===== FOOTER ===== -->
+<footer id="footer">
+  <div class="footer-content">
+    <div class="footer-links">
+      <a href="https://aikaryashala.com/bootcamp/kiet/index.html" class="footer-link" target="_blank">Bootcamp</a>
+      <a href="https://aikaryashala.com/" class="footer-link" target="_blank">AI Karyashala</a>
+    </div>
+    <div class="footer-copyright">
+      © 2026 AI-Karyashala
+    </div>
+  </div>
+</footer>
 
 <script>
   const SUPABASE_URL = "https://dkjxuswyoyjitjdohepg.supabase.co";
