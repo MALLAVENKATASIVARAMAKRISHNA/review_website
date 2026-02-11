@@ -7,63 +7,53 @@
 
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
       margin: 0;
       padding: 0;
-      color: #e2e8f0;
+      color: white;
     }
 
-    .hero {
+    header {
       text-align: center;
-      padding: 60px 20px 30px 20px;
+      padding: 60px 20px 30px;
     }
 
-    .hero h1 {
-      font-size: 38px;
-      margin: 0;
-      font-weight: 700;
-      color: #ffffff;
-    }
-
-    .hero p {
-      margin-top: 10px;
-      font-size: 16px;
-      color: #94a3b8;
-    }
-
-    .quote-section {
-      text-align: center;
-      font-style: italic;
-      font-size: 18px;
+    header h2 {
       color: #3b82f6;
-      margin-bottom: 30px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      margin: 0;
     }
 
-    .section-title {
-      text-align: center;
-      font-size: 24px;
-      font-weight: 600;
-      margin-bottom: 25px;
-      color: #ffffff;
+    header h1 {
+      font-size: 40px;
+      margin: 10px 0;
+    }
+
+    header p {
+      color: #94a3b8;
+      max-width: 600px;
+      margin: auto;
+      font-size: 16px;
     }
 
     .reviews {
       max-width: 1400px;
-      margin: auto;
-      padding: 0 40px;
+      margin: 40px auto;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 30px;
+      padding: 0 20px;
     }
 
-    @media (max-width: 1100px) {
+    @media (max-width: 992px) {
       .reviews {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 600px) {
       .reviews {
         grid-template-columns: 1fr;
       }
@@ -71,24 +61,23 @@
 
     .card {
       background: #1e293b;
-      padding: 20px;
+      padding: 25px;
       border-radius: 16px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
       display: flex;
-      gap: 15px;
+      gap: 20px;
       align-items: flex-start;
-      height: 230px;
-      transition: 0.2s ease;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      transition: transform 0.3s ease;
+      height: 240px;
     }
 
     .card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
     }
 
     .card img {
-      width: 80px;
-      height: 80px;
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
       object-fit: cover;
       border: 3px solid #3b82f6;
@@ -102,42 +91,53 @@
     }
 
     .review {
-      background: #0f172a;
-      padding: 18px;
-      border-radius: 12px;
-      font-size: 14px;
+      position: relative;
+      font-size: 15px;
       line-height: 1.6;
+      background: #0f172a;
+      padding: 20px;
+      border-radius: 12px;
       height: 120px;
       overflow-y: auto;
+      color: #e2e8f0;
     }
 
     .quote-icon {
-      font-size: 28px;
+      font-size: 40px;
       color: #3b82f6;
-      font-weight: bold;
-      display: block;
-      margin-bottom: 5px;
+      position: absolute;
+      top: -10px;
+      left: 10px;
+      opacity: 0.2;
+    }
+
+    .rating {
+      margin-top: 10px;
+      font-size: 18px;
+      letter-spacing: 3px;
+      color: #3b82f6;
     }
 
     .student-info {
-      margin-top: 10px;
+      margin-top: 8px;
       font-size: 13px;
       color: #94a3b8;
     }
 
     .pagination {
       text-align: center;
-      margin: 50px 0;
+      margin: 40px 0 60px;
     }
 
     .pagination button {
       padding: 8px 18px;
-      margin: 0 5px;
+      margin: 0 8px;
       border: none;
       background: #3b82f6;
       color: white;
       border-radius: 6px;
       cursor: pointer;
+      transition: 0.3s;
     }
 
     .pagination button:hover {
@@ -145,8 +145,13 @@
     }
 
     .pagination button:disabled {
-      background: #475569;
+      background: #334155;
       cursor: not-allowed;
+    }
+
+    #pageInfo {
+      font-size: 14px;
+      color: #94a3b8;
     }
 
   </style>
@@ -154,113 +159,112 @@
 
 <body>
 
-  <div class="hero">
-    <h1>AI Bootcamp Reviews</h1>
-    <p>Experiences shared by participants of AI Karyashala Bootcamp</p>
-  </div>
+<header>
+  <h2>AI Bootcamp Reviews</h2>
+  <h1>What Participants Say</h1>
+  <p>"Empowering students with AI skills for the future."</p>
+</header>
 
-  <div class="quote-section">
-    "Empowering students with practical AI skills for the future."
-  </div>
+<div class="reviews" id="reviews"></div>
 
-  <div class="section-title">
-    What Participants Say
-  </div>
+<div class="pagination">
+  <button id="prevBtn" onclick="prevPage()">Previous</button>
+  <span id="pageInfo"></span>
+  <button id="nextBtn" onclick="nextPage()">Next</button>
+</div>
 
-  <div class="reviews" id="reviews"></div>
+<script>
+  const SUPABASE_URL = "https://dkjxuswyoyjitjdohepg.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRranh1c3d5b3lqaXRqZG9oZXBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3NzM1MzQsImV4cCI6MjA4NjM0OTUzNH0.Qf-MVpBqWLGfIpewx7qKKV1YsgKEtKh1AQVdBLctLjE";
 
-  <div class="pagination">
-    <button id="prevBtn" onclick="prevPage()">Previous</button>
-    <span id="pageInfo" style="margin: 0 15px;"></span>
-    <button id="nextBtn" onclick="nextPage()">Next</button>
-  </div>
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
 
-  <script>
-    const SUPABASE_URL = "https://dkjxuswyoyjitjdohepg.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRranh1c3d5b3lqaXRqZG9oZXBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3NzM1MzQsImV4cCI6MjA4NjM0OTUzNH0.Qf-MVpBqWLGfIpewx7qKKV1YsgKEtKh1AQVdBLctLjE";
+  const reviewsPerPage = 9;
+  let currentPage = 1;
+  let totalPages = 1;
 
-    const supabaseClient = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
+  async function getTotalPages() {
+    const { count } = await supabaseClient
+      .from("bootcamp_reviews")
+      .select("*", { count: "exact", head: true });
 
-    const reviewsPerPage = 9;
-    let currentPage = 1;
-    let totalPages = 1;
+    totalPages = Math.ceil(count / reviewsPerPage);
+    updatePageInfo();
+  }
 
-    async function getTotalPages() {
-      const { count } = await supabaseClient
-        .from("bootcamp_reviews")
-        .select("*", { count: "exact", head: true });
+  async function loadReviews(page) {
+    const from = (page - 1) * reviewsPerPage;
+    const to = from + reviewsPerPage - 1;
 
-      totalPages = Math.ceil(count / reviewsPerPage);
-      updatePageInfo();
-    }
+    const { data } = await supabaseClient
+      .from("bootcamp_reviews")
+      .select("*")
+      .range(from, to);
 
-    async function loadReviews(page) {
-      const from = (page - 1) * reviewsPerPage;
-      const to = from + reviewsPerPage - 1;
+    const container = document.getElementById("reviews");
+    container.innerHTML = "";
 
-      const { data } = await supabaseClient
-        .from("bootcamp_reviews")
-        .select("*")
-        .range(from, to);
+    data.forEach(review => {
+      const card = document.createElement("div");
+      card.className = "card";
 
-      const container = document.getElementById("reviews");
-      container.innerHTML = "";
+      const imageUrl =
+        `${SUPABASE_URL}/storage/v1/object/public/student-images/${review.image_path}`;
 
-      data.forEach(review => {
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const imageUrl =
-          `${SUPABASE_URL}/storage/v1/object/public/student-images/${review.image_path}`;
-
-        card.innerHTML = `
-          <img src="${imageUrl}" 
-               onerror="this.src='https://via.placeholder.com/80'" />
-          <div class="card-content">
-            <div class="review">
-              <span class="quote-icon">“</span>
-              ${review.review_text || ""}
-            </div>
-            <div class="student-info">
-              ${review.full_name || ""} • ${review.roll_number || ""}
-            </div>
+      card.innerHTML = `
+        <img src="${imageUrl}" 
+             onerror="this.src='https://via.placeholder.com/90'" />
+        <div class="card-content">
+          <div class="review">
+            <span class="quote-icon">“</span>
+            ${review.review_text || ""}
           </div>
-        `;
 
-        container.appendChild(card);
-      });
+          <div class="rating">
+            ${"★".repeat(review.rating || 0)}
+            ${"☆".repeat(5 - (review.rating || 0))}
+          </div>
 
-      updatePageInfo();
+          <div class="student-info">
+            ${review.full_name || ""} • ${review.roll_number || ""}
+          </div>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+
+    updatePageInfo();
+  }
+
+  function updatePageInfo() {
+    document.getElementById("pageInfo").innerText =
+      `Page ${currentPage} of ${totalPages}`;
+
+    document.getElementById("prevBtn").disabled = currentPage === 1;
+    document.getElementById("nextBtn").disabled = currentPage === totalPages;
+  }
+
+  function nextPage() {
+    if (currentPage < totalPages) {
+      currentPage++;
+      loadReviews(currentPage);
     }
+  }
 
-    function updatePageInfo() {
-      document.getElementById("pageInfo").innerText =
-        `Page ${currentPage} of ${totalPages}`;
-
-      document.getElementById("prevBtn").disabled = currentPage === 1;
-      document.getElementById("nextBtn").disabled = currentPage === totalPages;
+  function prevPage() {
+    if (currentPage > 1) {
+      currentPage--;
+      loadReviews(currentPage);
     }
+  }
 
-    function nextPage() {
-      if (currentPage < totalPages) {
-        currentPage++;
-        loadReviews(currentPage);
-      }
-    }
-
-    function prevPage() {
-      if (currentPage > 1) {
-        currentPage--;
-        loadReviews(currentPage);
-      }
-    }
-
-    getTotalPages();
-    loadReviews(currentPage);
-  </script>
+  getTotalPages();
+  loadReviews(currentPage);
+</script>
 
 </body>
 </html>
