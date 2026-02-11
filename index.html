@@ -7,125 +7,63 @@
 
   <style>
     body {
-      font-family: "Segoe UI", Arial, sans-serif;
+      font-family: Arial, sans-serif;
       background: #0f172a;
       margin: 0;
       padding: 0;
       color: #e2e8f0;
     }
 
-    /* HERO */
     .hero {
-      background: linear-gradient(90deg, #1e293b, #0f172a);
-      color: white;
-      padding: 60px 20px;
       text-align: center;
-      border-bottom: 1px solid #1e293b;
+      padding: 60px 20px 30px 20px;
     }
 
     .hero h1 {
-      font-size: 36px;
+      font-size: 38px;
       margin: 0;
       font-weight: 700;
+      color: #ffffff;
     }
 
     .hero p {
       margin-top: 10px;
       font-size: 16px;
-      opacity: 0.8;
+      color: #94a3b8;
     }
 
-    /* QUOTE SECTION */
     .quote-section {
       text-align: center;
-      padding: 40px 20px 10px 20px;
-    }
-
-    .quote-text {
-      font-size: 18px;
       font-style: italic;
-      color: #cbd5e1;
-      max-width: 700px;
-      margin: auto;
-      line-height: 1.8;
-      position: relative;
-    }
-
-    .quote-text::before {
-      content: "“";
-      font-size: 40px;
+      font-size: 18px;
       color: #3b82f6;
-      position: absolute;
-      left: -25px;
-      top: -10px;
+      margin-bottom: 30px;
     }
 
-    .quote-text::after {
-      content: "”";
-      font-size: 40px;
-      color: #3b82f6;
-      position: absolute;
-      right: -25px;
-      bottom: -20px;
-    }
-
-    /* STATS */
-    .stats {
-      max-width: 1100px;
-      margin: 20px auto 40px auto;
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-    }
-
-    .stat-box {
-      background: #1e293b;
-      padding: 20px 40px;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-      text-align: center;
-    }
-
-    .stat-number {
-      font-size: 24px;
-      font-weight: 700;
-      color: #3b82f6;
-    }
-
-    .stat-label {
-      font-size: 13px;
-      color: #94a3b8;
-      margin-top: 5px;
-    }
-
-    /* SECTION TITLE */
     .section-title {
       text-align: center;
       font-size: 24px;
       font-weight: 600;
-      margin-top: 20px;
-      margin-bottom: 10px;
+      margin-bottom: 25px;
       color: #ffffff;
-      letter-spacing: 0.5px;
     }
 
-    /* REVIEW GRID */
     .reviews {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: auto;
+      padding: 0 40px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 25px;
-      padding: 20px;
+      gap: 30px;
     }
 
-    @media (max-width: 992px) {
+    @media (max-width: 1100px) {
       .reviews {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
       .reviews {
         grid-template-columns: 1fr;
       }
@@ -134,66 +72,72 @@
     .card {
       background: #1e293b;
       padding: 20px;
-      border-radius: 14px;
+      border-radius: 16px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.5);
       display: flex;
       gap: 15px;
       align-items: flex-start;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      height: 230px;
+      transition: 0.2s ease;
     }
 
     .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
     }
 
     .card img {
-      width: 70px;
-      height: 70px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid #3b82f6;
+      border: 3px solid #3b82f6;
+    }
+
+    .card-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .review {
+      background: #0f172a;
+      padding: 18px;
+      border-radius: 12px;
       font-size: 14px;
       line-height: 1.6;
-      background: #0f172a;
-      padding: 18px 14px 14px 14px;
-      border-radius: 10px;
-      font-weight: 500;
-      color: #e2e8f0;
+      height: 120px;
+      overflow-y: auto;
     }
 
     .quote-icon {
-      display: block;
-      font-size: 32px;
+      font-size: 28px;
       color: #3b82f6;
-      margin-bottom: 5px;
       font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
     }
 
     .student-info {
       margin-top: 10px;
-      font-size: 12px;
+      font-size: 13px;
       color: #94a3b8;
     }
 
-    /* PAGINATION */
     .pagination {
       text-align: center;
-      margin: 40px 0;
+      margin: 50px 0;
     }
 
     .pagination button {
       padding: 8px 18px;
-      margin: 0 8px;
+      margin: 0 5px;
       border: none;
       background: #3b82f6;
       color: white;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: background 0.2s ease;
     }
 
     .pagination button:hover {
@@ -204,6 +148,7 @@
       background: #475569;
       cursor: not-allowed;
     }
+
   </style>
 </head>
 
@@ -211,20 +156,11 @@
 
   <div class="hero">
     <h1>AI Bootcamp Reviews</h1>
-    <p>Insights and feedback from our engineering students</p>
+    <p>Experiences shared by participants of AI Karyashala Bootcamp</p>
   </div>
 
   <div class="quote-section">
-    <p class="quote-text">
-      Empowering future engineers through practical AI learning.
-    </p>
-  </div>
-
-  <div class="stats">
-    <div class="stat-box">
-      <div class="stat-number" id="totalReviews">0</div>
-      <div class="stat-label">Total Reviews</div>
-    </div>
+    "Empowering students with practical AI skills for the future."
   </div>
 
   <div class="section-title">
@@ -235,7 +171,7 @@
 
   <div class="pagination">
     <button id="prevBtn" onclick="prevPage()">Previous</button>
-    <span id="pageInfo"></span>
+    <span id="pageInfo" style="margin: 0 15px;"></span>
     <button id="nextBtn" onclick="nextPage()">Next</button>
   </div>
 
@@ -256,8 +192,6 @@
       const { count } = await supabaseClient
         .from("bootcamp_reviews")
         .select("*", { count: "exact", head: true });
-
-      document.getElementById("totalReviews").innerText = count;
 
       totalPages = Math.ceil(count / reviewsPerPage);
       updatePageInfo();
@@ -283,14 +217,15 @@
           `${SUPABASE_URL}/storage/v1/object/public/student-images/${review.image_path}`;
 
         card.innerHTML = `
-          <img src="${imageUrl}" onerror="this.src='https://via.placeholder.com/70'" />
-          <div>
+          <img src="${imageUrl}" 
+               onerror="this.src='https://via.placeholder.com/80'" />
+          <div class="card-content">
             <div class="review">
               <span class="quote-icon">“</span>
-              ${review.review_text}
+              ${review.review_text || ""}
             </div>
             <div class="student-info">
-              ${review.full_name} • ${review.roll_number}
+              ${review.full_name || ""} • ${review.roll_number || ""}
             </div>
           </div>
         `;
@@ -303,7 +238,7 @@
 
     function updatePageInfo() {
       document.getElementById("pageInfo").innerText =
-        ` Page ${currentPage} of ${totalPages} `;
+        `Page ${currentPage} of ${totalPages}`;
 
       document.getElementById("prevBtn").disabled = currentPage === 1;
       document.getElementById("nextBtn").disabled = currentPage === totalPages;
