@@ -14,24 +14,51 @@
       color: white;
     }
 
+    /* ===== HEADER WITH LOGO ===== */
     header {
-      text-align: center;
-      padding: 60px 20px 20px;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 15px 40px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
 
-    header h2 {
+    .logo {
+      display: inline-block;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .logo img {
+      height: 60px;
+      width: auto;
+    }
+
+    /* ===== HERO SECTION (MOVED FROM HEADER) ===== */
+    .hero-section {
+      text-align: center;
+      padding: 80px 20px 40px;
+    }
+
+    .hero-section h2 {
       color: #3b82f6;
       font-weight: 500;
       letter-spacing: 2px;
       margin: 0;
+      font-size: 16px;
     }
 
-    header h1 {
+    .hero-section h1 {
       font-size: 38px;
       margin: 10px 0;
     }
 
-    header p {
+    .hero-section p {
       color: #94a3b8;
       max-width: 600px;
       margin: auto;
@@ -86,6 +113,18 @@
     @media (max-width: 600px) {
       .reviews {
         grid-template-columns: 1fr;
+      }
+      
+      .hero-section h1 {
+        font-size: 28px;
+      }
+      
+      header {
+        padding: 10px 20px;
+      }
+      
+      .logo img {
+        height: 45px;
       }
     }
 
@@ -143,12 +182,11 @@
     }
 
     .rating {
-  margin-top: 10px;
-  font-size: 18px;
-  letter-spacing: 3px;
-  color: #fbbf24;   /* Yellow star color */
-}
-
+      margin-top: 10px;
+      font-size: 18px;
+      letter-spacing: 3px;
+      color: #fbbf24;   /* Yellow star color */
+    }
 
     .student-info {
       margin-top: 8px;
@@ -187,16 +225,47 @@
       color: #94a3b8;
     }
 
+    /* ===== RANDOM BUTTON ===== */
+    .random-button {
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+    }
+
+    .random-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+    }
+
+    .random-button:active {
+      transform: translateY(0);
+    }
+
   </style>
 </head>
 
 <body>
 
+<!-- ===== NEW HEADER WITH LOGO ===== -->
 <header>
+  <a href="#" class="logo" onclick="goToHome(event)">
+    <img src="https://aikaryashala.com/images/logo%20transparent.png" alt="AI Karyashala Logo">
+  </a>
+</header>
+
+<!-- ===== HERO SECTION (CONTENT MOVED FROM HEADER) ===== -->
+<div class="hero-section">
   <h2>AI Bootcamp Reviews</h2>
   <h1>What Our Participants Are Saying</h1>
   <p>Empowering students with practical AI skills for the future.</p>
-</header>
+</div>
 
 <!-- ===== STATS SECTION ===== -->
 <div class="stats">
@@ -209,6 +278,13 @@
     <div class="stat-number" id="totalReviews">0</div>
     <div class="stat-label">Total Reviews</div>
   </div>
+</div>
+
+<!-- ===== RANDOM BUTTON ===== -->
+<div style="text-align: center; margin: 20px 0;">
+  <button id="randomBtn" onclick="loadRandomReviews()" class="random-button">
+    🎲 Show Random Reviews
+  </button>
 </div>
 
 <!-- ===== REVIEWS ===== -->
@@ -232,6 +308,80 @@
   const reviewsPerPage = 9;
   let currentPage = 1;
   let totalPages = 1;
+  let isRandomMode = false;
+
+  // Function to go to home page
+  function goToHome(event) {
+    event.preventDefault();
+    isRandomMode = false;
+    currentPage = 1;
+    loadReviews(currentPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Function to load 9 random reviews
+  async function loadRandomReviews() {
+    isRandomMode = true;
+    
+    // Get total count first
+    const { count } = await supabaseClient
+      .from("bootcamp_reviews")
+      .select("*", { count: "exact", head: true });
+
+    // Generate 9 random indices
+    const randomIndices = [];
+    while (randomIndices.length < Math.min(9, count)) {
+      const randomIndex = Math.floor(Math.random() * count);
+      if (!randomIndices.includes(randomIndex)) {
+        randomIndices.push(randomIndex);
+      }
+    }
+
+    // Fetch all reviews and filter by random indices
+    const { data: allReviews } = await supabaseClient
+      .from("bootcamp_reviews")
+      .select("*");
+
+    const randomReviews = randomIndices.map(index => allReviews[index]);
+
+    const container = document.getElementById("reviews");
+    container.innerHTML = "";
+
+    randomReviews.forEach(review => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const imageUrl =
+        `${SUPABASE_URL}/storage/v1/object/public/student-images/${review.image_path}`;
+
+      card.innerHTML = `
+        <img src="${imageUrl}" 
+             onerror="this.src='https://via.placeholder.com/90'" />
+        <div class="card-content">
+          <div class="review">
+            <span class="quote-icon">"</span>
+            ${review.review_text || ""}
+          </div>
+
+          <div class="rating">
+            ${"★".repeat(review.rating || 0)}
+            ${"☆".repeat(5 - (review.rating || 0))}
+          </div>
+
+          <div class="student-info">
+            ${review.full_name || ""} • ${review.roll_number || ""}
+          </div>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+
+    // Update pagination to show "Random Reviews"
+    document.getElementById("pageInfo").innerText = "Random Reviews";
+    document.getElementById("prevBtn").disabled = true;
+    document.getElementById("nextBtn").disabled = true;
+  }
 
   async function getStats() {
     const { data, count } = await supabaseClient
@@ -253,6 +403,7 @@
   }
 
   async function loadReviews(page) {
+    isRandomMode = false;
     const from = (page - 1) * reviewsPerPage;
     const to = from + reviewsPerPage - 1;
 
@@ -276,7 +427,7 @@
              onerror="this.src='https://via.placeholder.com/90'" />
         <div class="card-content">
           <div class="review">
-            <span class="quote-icon">“</span>
+            <span class="quote-icon">"</span>
             ${review.review_text || ""}
           </div>
 
@@ -306,14 +457,14 @@
   }
 
   function nextPage() {
-    if (currentPage < totalPages) {
+    if (currentPage < totalPages && !isRandomMode) {
       currentPage++;
       loadReviews(currentPage);
     }
   }
 
   function prevPage() {
-    if (currentPage > 1) {
+    if (currentPage > 1 && !isRandomMode) {
       currentPage--;
       loadReviews(currentPage);
     }
