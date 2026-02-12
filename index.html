@@ -2,16 +2,23 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>AI Bootcamp Reviews</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Bootcamp Reviews - AI Karyashala</title>
+  <meta name="description" content="Read authentic reviews from AI Bootcamp participants. Empowering students with practical AI skills for the future.">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #0f172a, #1e293b);
       margin: 0;
       padding: 0;
       color: white;
+      min-height: 100vh;
     }
 
     html {
@@ -20,7 +27,8 @@
 
     /* ===== HEADER WITH LOGO ===== */
     header {
-      background: rgba(15, 23, 42, 0.8);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
       padding: 15px 40px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
       position: sticky;
@@ -44,6 +52,7 @@
     .logo img {
       height: 60px;
       width: auto;
+      display: block;
     }
 
     .contact-btn {
@@ -57,6 +66,7 @@
       cursor: pointer;
       transition: all 0.3s ease;
       text-decoration: none;
+      display: inline-block;
     }
 
     .contact-btn:hover {
@@ -65,10 +75,22 @@
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
     }
 
-    /* ===== HERO SECTION (MOVED FROM HEADER) ===== */
+    /* ===== HERO SECTION ===== */
     .hero-section {
       text-align: center;
       padding: 80px 20px 40px;
+      animation: fadeIn 0.8s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .hero-section h2 {
@@ -77,11 +99,16 @@
       letter-spacing: 2px;
       margin: 0;
       font-size: 16px;
+      text-transform: uppercase;
     }
 
     .hero-section h1 {
       font-size: 38px;
       margin: 10px 0;
+      background: linear-gradient(135deg, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .hero-section p {
@@ -89,6 +116,7 @@
       max-width: 600px;
       margin: auto;
       font-size: 15px;
+      line-height: 1.6;
     }
 
     /* ===== STATS ===== */
@@ -98,6 +126,18 @@
       gap: 60px;
       margin: 30px 0 20px;
       flex-wrap: wrap;
+      animation: slideUp 0.8s ease-out 0.2s both;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .stat-box {
@@ -106,6 +146,14 @@
       border-radius: 12px;
       text-align: center;
       box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      border: 1px solid rgba(59, 130, 246, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .stat-box:hover {
+      transform: translateY(-5px);
+      border-color: rgba(59, 130, 246, 0.3);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
     }
 
     .stat-number {
@@ -120,6 +168,34 @@
       margin-top: 5px;
     }
 
+    /* ===== LOADING SPINNER ===== */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 40px;
+      color: #3b82f6;
+      font-size: 18px;
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    .spinner {
+      border: 3px solid rgba(59, 130, 246, 0.1);
+      border-top: 3px solid #3b82f6;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
     /* ===== GRID ===== */
     .reviews {
       max-width: 1400px;
@@ -128,19 +204,33 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 30px;
       padding: 0 20px;
+      min-height: 400px;
+    }
+
+    @media (max-width: 1200px) {
+      .reviews {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+      }
     }
 
     @media (max-width: 992px) {
       .reviews {
         grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
       }
     }
 
     @media (max-width: 600px) {
       .reviews {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
       }
       
+      .hero-section {
+        padding: 60px 20px 30px;
+      }
+
       .hero-section h1 {
         font-size: 28px;
       }
@@ -151,6 +241,11 @@
       
       .logo img {
         height: 45px;
+      }
+
+      .contact-btn {
+        padding: 8px 15px;
+        font-size: 13px;
       }
     }
 
@@ -163,12 +258,33 @@
       gap: 20px;
       align-items: flex-start;
       box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-      transition: transform 0.3s ease;
+      transition: all 0.3s ease;
       height: 250px;
+      border: 1px solid rgba(59, 130, 246, 0.1);
+      opacity: 0;
+      animation: cardFadeIn 0.5s ease-out forwards;
     }
 
+    @keyframes cardFadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.15s; }
+    .card:nth-child(3) { animation-delay: 0.2s; }
+    .card:nth-child(4) { animation-delay: 0.25s; }
+    .card:nth-child(5) { animation-delay: 0.3s; }
+    .card:nth-child(6) { animation-delay: 0.35s; }
+    .card:nth-child(7) { animation-delay: 0.4s; }
+    .card:nth-child(8) { animation-delay: 0.45s; }
+    .card:nth-child(9) { animation-delay: 0.5s; }
+
     .card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(59, 130, 246, 0.3);
+      border-color: rgba(59, 130, 246, 0.3);
     }
 
     .card img {
@@ -177,6 +293,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 3px solid #3b82f6;
+      flex-shrink: 0;
     }
 
     .card-content {
@@ -184,6 +301,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      min-width: 0;
     }
 
     .review {
@@ -198,6 +316,20 @@
       color: #e2e8f0;
     }
 
+    .review::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .review::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 10px;
+    }
+
+    .review::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 10px;
+    }
+
     .quote-icon {
       font-size: 40px;
       color: #3b82f6;
@@ -205,19 +337,23 @@
       top: -10px;
       left: 10px;
       opacity: 0.2;
+      user-select: none;
     }
 
     .rating {
       margin-top: 10px;
       font-size: 18px;
       letter-spacing: 3px;
-      color: #fbbf24;   /* Yellow star color */
+      color: #fbbf24;
     }
 
     .student-info {
       margin-top: 8px;
       font-size: 13px;
       color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     /* ===== PAGINATION ===== */
@@ -227,31 +363,44 @@
     }
 
     .pagination button {
-      padding: 8px 18px;
+      padding: 10px 20px;
       margin: 0 8px;
       border: none;
       background: #3b82f6;
       color: white;
       border-radius: 6px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      font-weight: 600;
     }
 
-    .pagination button:hover {
+    .pagination button:hover:not(:disabled) {
       background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
     }
 
     .pagination button:disabled {
       background: #334155;
       cursor: not-allowed;
+      opacity: 0.5;
     }
 
     #pageInfo {
+      display: inline-block;
       font-size: 14px;
       color: #94a3b8;
+      margin: 0 10px;
+      min-width: 120px;
     }
 
     /* ===== RANDOM BUTTON ===== */
+    .random-button-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+
     .random-button {
       padding: 12px 30px;
       background: linear-gradient(135deg, #8b5cf6, #6366f1);
@@ -268,6 +417,7 @@
     .random-button:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
     }
 
     .random-button:active {
@@ -323,16 +473,99 @@
       margin-top: 10px;
     }
 
+    /* ===== SCROLL TO TOP BUTTON ===== */
+    .scroll-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #3b82f6;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+      transition: all 0.3s ease;
+      z-index: 999;
+    }
+
+    .scroll-to-top.visible {
+      display: flex;
+    }
+
+    .scroll-to-top:hover {
+      background: #2563eb;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+    }
+
+    /* ===== ERROR MESSAGE ===== */
+    .error-message {
+      text-align: center;
+      padding: 40px 20px;
+      color: #ef4444;
+      font-size: 16px;
+      display: none;
+    }
+
+    .error-message.active {
+      display: block;
+    }
+
     @media (max-width: 768px) {
       .footer-links {
         flex-direction: column;
         width: 100%;
+        max-width: 300px;
       }
       
       .footer-link {
         width: 100%;
         text-align: center;
       }
+
+      .scroll-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+      }
+
+      .stats {
+        gap: 30px;
+      }
+
+      .stat-box {
+        padding: 15px 30px;
+      }
+    }
+
+    /* ===== ACCESSIBILITY ===== */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    /* Focus styles for keyboard navigation */
+    a:focus,
+    button:focus {
+      outline: 2px solid #3b82f6;
+      outline-offset: 2px;
     }
 
   </style>
@@ -340,15 +573,15 @@
 
 <body>
 
-<!-- ===== NEW HEADER WITH LOGO ===== -->
+<!-- ===== HEADER WITH LOGO ===== -->
 <header>
-  <a href="#" class="logo" onclick="goToHome(event)">
+  <a href="#" class="logo" onclick="goToHome(event)" aria-label="Go to home">
     <img src="https://aikaryashala.com/images/logo%20transparent.png" alt="AI Karyashala Logo">
   </a>
   <a href="#footer" class="contact-btn">Contact Us</a>
 </header>
 
-<!-- ===== HERO SECTION (CONTENT MOVED FROM HEADER) ===== -->
+<!-- ===== HERO SECTION ===== -->
 <div class="hero-section">
   <h2>AI Bootcamp Reviews</h2>
   <h1>What Our Participants Are Saying</h1>
@@ -369,27 +602,43 @@
 </div>
 
 <!-- ===== RANDOM BUTTON ===== -->
-<div style="text-align: center; margin: 20px 0;">
+<div class="random-button-container">
   <button id="randomBtn" onclick="loadRandomReviews()" class="random-button">
     🎲 Show Random Reviews
   </button>
+</div>
+
+<!-- ===== LOADING SPINNER ===== -->
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <p>Loading reviews...</p>
+</div>
+
+<!-- ===== ERROR MESSAGE ===== -->
+<div class="error-message" id="errorMessage">
+  Failed to load reviews. Please try again later.
 </div>
 
 <!-- ===== REVIEWS ===== -->
 <div class="reviews" id="reviews"></div>
 
 <div class="pagination">
-  <button id="prevBtn" onclick="prevPage()">Previous</button>
-  <span id="pageInfo"></span>
-  <button id="nextBtn" onclick="nextPage()">Next</button>
+  <button id="prevBtn" onclick="prevPage()" aria-label="Previous page">Previous</button>
+  <span id="pageInfo" aria-live="polite"></span>
+  <button id="nextBtn" onclick="nextPage()" aria-label="Next page">Next</button>
 </div>
+
+<!-- ===== SCROLL TO TOP BUTTON ===== -->
+<button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()" aria-label="Scroll to top">
+  ↑
+</button>
 
 <!-- ===== FOOTER ===== -->
 <footer id="footer">
   <div class="footer-content">
     <div class="footer-links">
-      <a href="https://aikaryashala.com/bootcamp/kiet/index.html" class="footer-link" target="_blank">Bootcamp</a>
-      <a href="https://aikaryashala.com/" class="footer-link" target="_blank">AI Karyashala</a>
+      <a href="https://aikaryashala.com/bootcamp/kiet/index.html" class="footer-link" target="_blank" rel="noopener noreferrer">Bootcamp</a>
+      <a href="https://aikaryashala.com/" class="footer-link" target="_blank" rel="noopener noreferrer">AI Karyashala</a>
     </div>
     <div class="footer-copyright">
       © 2026 AI-Karyashala
@@ -411,6 +660,28 @@
   let totalPages = 1;
   let isRandomMode = false;
 
+  // Show/hide loading spinner
+  function showLoading(show) {
+    const loading = document.getElementById('loading');
+    const reviews = document.getElementById('reviews');
+    const errorMessage = document.getElementById('errorMessage');
+    
+    if (show) {
+      loading.classList.add('active');
+      reviews.style.opacity = '0.5';
+      errorMessage.classList.remove('active');
+    } else {
+      loading.classList.remove('active');
+      reviews.style.opacity = '1';
+    }
+  }
+
+  // Show error message
+  function showError() {
+    document.getElementById('errorMessage').classList.add('active');
+    document.getElementById('loading').classList.remove('active');
+  }
+
   // Function to go to home page
   function goToHome(event) {
     event.preventDefault();
@@ -422,131 +693,132 @@
 
   // Function to load 9 random reviews
   async function loadRandomReviews() {
-    isRandomMode = true;
-    
-    // Get total count first
-    const { count } = await supabaseClient
-      .from("bootcamp_reviews")
-      .select("*", { count: "exact", head: true });
+    try {
+      showLoading(true);
+      isRandomMode = true;
+      
+      // Get total count first
+      const { count } = await supabaseClient
+        .from("bootcamp_reviews")
+        .select("*", { count: "exact", head: true });
 
-    // Generate 9 random indices
-    const randomIndices = [];
-    while (randomIndices.length < Math.min(9, count)) {
-      const randomIndex = Math.floor(Math.random() * count);
-      if (!randomIndices.includes(randomIndex)) {
-        randomIndices.push(randomIndex);
+      // Generate 9 random indices
+      const randomIndices = [];
+      while (randomIndices.length < Math.min(9, count)) {
+        const randomIndex = Math.floor(Math.random() * count);
+        if (!randomIndices.includes(randomIndex)) {
+          randomIndices.push(randomIndex);
+        }
       }
+
+      // Fetch all reviews and filter by random indices
+      const { data: allReviews, error } = await supabaseClient
+        .from("bootcamp_reviews")
+        .select("*");
+
+      if (error) throw error;
+
+      const randomReviews = randomIndices.map(index => allReviews[index]);
+
+      displayReviews(randomReviews);
+
+      // Update pagination to show "Random Reviews"
+      document.getElementById("pageInfo").innerText = "Random Reviews";
+      document.getElementById("prevBtn").disabled = true;
+      document.getElementById("nextBtn").disabled = true;
+      
+      showLoading(false);
+    } catch (error) {
+      console.error('Error loading random reviews:', error);
+      showError();
+      showLoading(false);
     }
+  }
 
-    // Fetch all reviews and filter by random indices
-    const { data: allReviews } = await supabaseClient
-      .from("bootcamp_reviews")
-      .select("*");
-
-    const randomReviews = randomIndices.map(index => allReviews[index]);
-
+  // Function to display reviews
+  function displayReviews(reviews) {
     const container = document.getElementById("reviews");
     container.innerHTML = "";
 
-    randomReviews.forEach(review => {
+    reviews.forEach((review, index) => {
       const card = document.createElement("div");
       card.className = "card";
+      card.style.animationDelay = `${index * 0.05}s`;
 
-      const imageUrl =
-        `${SUPABASE_URL}/storage/v1/object/public/student-images/${review.image_path}`;
+      const imageUrl = `${SUPABASE_URL}/storage/v1/object/public/student-images/${review.image_path}`;
 
       card.innerHTML = `
         <img src="${imageUrl}" 
-             onerror="this.src='https://via.placeholder.com/90'" />
+             alt="${review.full_name || 'Student'}'s photo"
+             onerror="this.src='https://via.placeholder.com/90?text=${encodeURIComponent((review.full_name || 'Student')[0])}')" />
         <div class="card-content">
           <div class="review">
-            <span class="quote-icon">"</span>
-            ${review.review_text || ""}
+            <span class="quote-icon" aria-hidden="true">"</span>
+            ${review.review_text || "No review text available."}
           </div>
 
-          <div class="rating">
-            ${"★".repeat(review.rating || 0)}
-            ${"☆".repeat(5 - (review.rating || 0))}
+          <div class="rating" role="img" aria-label="${review.rating || 0} out of 5 stars">
+            ${"★".repeat(review.rating || 0)}${"☆".repeat(5 - (review.rating || 0))}
           </div>
 
           <div class="student-info">
-            ${review.full_name || ""} • ${review.roll_number || ""}
+            ${review.full_name || "Anonymous"} • ${review.roll_number || "N/A"}
           </div>
         </div>
       `;
 
       container.appendChild(card);
     });
-
-    // Update pagination to show "Random Reviews"
-    document.getElementById("pageInfo").innerText = "Random Reviews";
-    document.getElementById("prevBtn").disabled = true;
-    document.getElementById("nextBtn").disabled = true;
   }
 
   async function getStats() {
-    const { data, count } = await supabaseClient
-      .from("bootcamp_reviews")
-      .select("rating", { count: "exact" });
+    try {
+      const { data, count, error } = await supabaseClient
+        .from("bootcamp_reviews")
+        .select("rating", { count: "exact" });
 
-    document.getElementById("totalReviews").innerText = count;
+      if (error) throw error;
 
-    let totalRating = 0;
-    data.forEach(item => {
-      totalRating += item.rating || 0;
-    });
+      document.getElementById("totalReviews").innerText = count || 0;
 
-    const avg = (totalRating / count).toFixed(1);
-    document.getElementById("avgRating").innerText = avg + " / 5";
+      let totalRating = 0;
+      if (data && data.length > 0) {
+        data.forEach(item => {
+          totalRating += item.rating || 0;
+        });
+        const avg = (totalRating / count).toFixed(1);
+        document.getElementById("avgRating").innerText = avg + " / 5";
+      }
 
-    totalPages = Math.ceil(count / reviewsPerPage);
-    updatePageInfo();
+      totalPages = Math.ceil((count || 0) / reviewsPerPage);
+      updatePageInfo();
+    } catch (error) {
+      console.error('Error loading stats:', error);
+    }
   }
 
   async function loadReviews(page) {
-    isRandomMode = false;
-    const from = (page - 1) * reviewsPerPage;
-    const to = from + reviewsPerPage - 1;
+    try {
+      showLoading(true);
+      isRandomMode = false;
+      const from = (page - 1) * reviewsPerPage;
+      const to = from + reviewsPerPage - 1;
 
-    const { data } = await supabaseClient
-      .from("bootcamp_reviews")
-      .select("*")
-      .range(from, to);
+      const { data, error } = await supabaseClient
+        .from("bootcamp_reviews")
+        .select("*")
+        .range(from, to);
 
-    const container = document.getElementById("reviews");
-    container.innerHTML = "";
+      if (error) throw error;
 
-    data.forEach(review => {
-      const card = document.createElement("div");
-      card.className = "card";
-
-      const imageUrl =
-        `${SUPABASE_URL}/storage/v1/object/public/student-images/${review.image_path}`;
-
-      card.innerHTML = `
-        <img src="${imageUrl}" 
-             onerror="this.src='https://via.placeholder.com/90'" />
-        <div class="card-content">
-          <div class="review">
-            <span class="quote-icon">"</span>
-            ${review.review_text || ""}
-          </div>
-
-          <div class="rating">
-            ${"★".repeat(review.rating || 0)}
-            ${"☆".repeat(5 - (review.rating || 0))}
-          </div>
-
-          <div class="student-info">
-            ${review.full_name || ""} • ${review.roll_number || ""}
-          </div>
-        </div>
-      `;
-
-      container.appendChild(card);
-    });
-
-    updatePageInfo();
+      displayReviews(data || []);
+      updatePageInfo();
+      showLoading(false);
+    } catch (error) {
+      console.error('Error loading reviews:', error);
+      showError();
+      showLoading(false);
+    }
   }
 
   function updatePageInfo() {
@@ -561,6 +833,7 @@
     if (currentPage < totalPages && !isRandomMode) {
       currentPage++;
       loadReviews(currentPage);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
@@ -568,9 +841,26 @@
     if (currentPage > 1 && !isRandomMode) {
       currentPage--;
       loadReviews(currentPage);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
+  // Scroll to top button functionality
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Show/hide scroll to top button
+  window.addEventListener('scroll', function() {
+    const scrollToTopBtn = document.getElementById('scrollToTop');
+    if (window.scrollY > 300) {
+      scrollToTopBtn.classList.add('visible');
+    } else {
+      scrollToTopBtn.classList.remove('visible');
+    }
+  });
+
+  // Initialize
   getStats();
   loadReviews(currentPage);
 </script>
